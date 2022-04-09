@@ -3,16 +3,16 @@ public class Input {
     private static String command = "";
     private static String product = "";
     private static String price = "";
-    private static String market = "";
+    private static String shop = "";
 
-    public static String checkInput(String text) {
+    public static void checkInput(String text) {
 
-        String formattedText = "";
-        String command = commandName(text);
+        command = commandName(text);
 
         try {
             switch (command) {
                 case ("ДОБАВИТЬ_МАГАЗИН"):
+                    product = "";
                     MarketAndProduct.addMarket(marketName(text));
                     break;
 
@@ -30,6 +30,7 @@ public class Input {
 
                 case ("ВЫХОД"):
                     Main.mongoClient.close();
+                    System.exit(0);
                     break;
 
                 default:
@@ -38,18 +39,21 @@ public class Input {
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
-        return formattedText;
     }
 
     public static String commandName(String text) {
-        for (int i = 0; i < text.length(); i++) {
-            char ch = text.charAt(i);
-            if (ch >= 'а' && ch <= 'я') {
-                command = text.substring(0, i - 1);
-                break;
-            } else {
-                command = text;
+        try {
+            for (int i = 0; i < text.length(); i++) {
+                char ch = text.charAt(i);
+                if (ch >= 'а' && ch <= 'я') {
+                    command = text.substring(0, i - 1);
+                    break;
+                } else {
+                    command = text;
+                }
             }
+        } catch (StringIndexOutOfBoundsException e) {
+            System.out.println("Неверный формат команды");
         }
         return command;
     }
@@ -57,8 +61,8 @@ public class Input {
     public static String marketName(String text) {
         int firstIndex = command.length() + product.length();
         int lastIndex = text.length();
-        market = text.substring(firstIndex, lastIndex);
-        return market;
+        shop = text.substring(firstIndex, lastIndex);
+        return shop;
     }
 
     public static String productName(String text) {
@@ -75,10 +79,16 @@ public class Input {
     }
 
     public static Integer priceProduct(String text) {
-        int firstIndex = command.length() + product.length();
-        int lastIndex = text.length();
-        price = text.substring(firstIndex, lastIndex);
-        return Integer.parseInt(price);
+        int coast = 0;
+        try {
+            int firstIndex = command.length() + product.length();
+            int lastIndex = text.length();
+            price = text.substring(firstIndex, lastIndex);
+            coast = Integer.parseInt(price);
+        } catch (NumberFormatException e) {
+            System.out.println("Неверный формат команды");
+        }
+        return coast;
     }
 }
 

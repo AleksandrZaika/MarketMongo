@@ -7,25 +7,23 @@ import java.util.*;
 
 public class Main {
 
-    public static MongoCollection<Document> marketCollection;
-    public static MongoCollection<Document> productCollection;
+    public static MongoCollection<Document> shops;
+    public static MongoCollection<Document> products;
     public static MongoClient mongoClient;
     public static MongoDatabase database;
 
     public static void main(String[] args) {
 
         mongoClient = new MongoClient("127.0.0.1", 27017);
-        database = mongoClient.getDatabase("marketmongo");
+        database = mongoClient.getDatabase("marketMongo");
 
         // Создаем коллекции
-        marketCollection = database.getCollection("market");
-        productCollection = database.getCollection("product");
+        shops = database.getCollection("shops");
+        products = database.getCollection("product");
 
         // Удалим из нее все документы
-        marketCollection.drop();
-        productCollection.drop();
-
-
+        shops.drop();
+        products.drop();
 
         Scanner scanner = new Scanner(System.in);
         MarketAndProduct.help();
@@ -35,5 +33,7 @@ public class Main {
 
             Input.checkInput(input);
         }
+
+
     }
 }
